@@ -62,27 +62,44 @@ After creating ECR Repository, push built image to there.
     ```bash
     docker tag \
     parameters-secrets-lambda-extension:prod \
-    "${AWS_ACCOUNT_ID}".dkr.ecr.ap-northeast-1.amazonaws.com/parameters-secrets-lambda-extension:latest
+    "${AWS_ACCOUNT_ID}".dkr.ecr.${REGION}.amazonaws.com/parameters-secrets-lambda-extension:latest
     ```
 
 3. Push
 
     ```bash
-    docker push "${AWS_ACCOUNT_ID}".dkr.ecr.ap-northeast-1.amazonaws.com/parameters-secrets-lambda-extension:latest
+    docker push "${AWS_ACCOUNT_ID}".dkr.ecr.${REGION}.amazonaws.com/parameters-secrets-lambda-extension:latest
     ```
-    
+
+# Update function
+
+```bash
+aws lambda update-function-code \
+--function-name 'lambda-parameters-extension-function' \
+--image-uri "${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/parameters-secrets-lambda-extension:latest"
+```
+
+Check the new **resolved** image uri.
+
+```bash
+aws lambda get-function \
+--function-name 'lambda-parameters-extension-function' \
+--query 'Code.ResolvedImageUri' \
+--output text
+```
+
 ## Invoke function
 
 When using AWS CLI v2. (The `--cli-binary-format` option is not required when using v1.)
 
 ```bash
 aws lambda invoke \
---function-name lambda-parameters-extension-function \
---invocation-type RequestResponse \
---cli-binary-format raw-in-base64-out \
+--function-name 'lambda-parameters-extension-function' \
+--invocation-type 'RequestResponse' \
+--cli-binary-format 'raw-in-base64-out' \
 --payload '{"useExtension": false, "count": 10}' \
---region ap-northeast-1 \
---log-type Tail \
+--region 'ap-northeast-1' \
+--log-type 'Tail' \
 /dev/stdout \
 | jq -sr '.[1] | .LogResult' \
 | base64 -d

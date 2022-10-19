@@ -99,9 +99,10 @@ func getValueByUsingExtension(key string) (string, error) {
 		return getValueByCallingParameterStoreAPI(key)
 	}
 
-	value := ""
+	// TODO: Get a value from extension
+	// https://docs.aws.amazon.com/systems-manager/latest/userguide/ps-integration-lambda-extensions.html
 
-	return value, nil
+	return "", nil
 }
 
 func main() {
