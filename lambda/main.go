@@ -30,7 +30,7 @@ var ssmClient *ssm.Client
 
 func handleRequest(ctx context.Context, payload Payload) (Response, error) {
 	initLog(payload)
-	defer log.Printf("[%s] end handler", env)
+	defer log.Printf("end handler at %s", env)
 
 	var f func(k string) (string, error)
 	if payload.UseExtension {
