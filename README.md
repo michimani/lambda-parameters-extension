@@ -1,7 +1,7 @@
 lambda-parameters-extension
 ===
 
-Sample code of using Parameter and Secret Lambda Extension.
+Sample code of using Parameter and Secret Lambda Extension in container image. (I'm in the middle of implementation and don't know if I can really do it.)
 
 # License
 
