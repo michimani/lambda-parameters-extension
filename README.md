@@ -1,7 +1,17 @@
 lambda-parameters-extension
 ===
 
-Sample code of using Parameter and Secret Lambda Extension in container image. (I'm in the middle of implementation and don't know if I can really do it.)
+Sample code of using Parameter and Secret Lambda Extension in container image. 
+
+# Summary
+
+## Get parameter by calling Parameter Store API using AWS SDK
+
+![Get parameter by calling Parameter Store API using AWS SDK](./docs/images/by-sdk.jpg)
+
+## Get parameter by calling AWSParametersAndSecretsLambdaExtension API
+
+![Get parameter by calling AWSParametersAndSecretsLambdaExtension API](./docs/images/by-extension.jpg)
 
 # License
 
