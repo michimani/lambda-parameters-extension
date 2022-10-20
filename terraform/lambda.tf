@@ -10,13 +10,6 @@ resource "aws_lambda_function" "function" {
       "ENV" = "prod"
     }
   }
-
-  # # Please don't provide Handler or Runtime or Layer when the intended function PackageType is Image.
-  # layers = [
-  #   # AWS Systems Manager Parameter Store and AWS Secrets Manager extension for ap-northeast-1.
-  #   # https://docs.aws.amazon.com/systems-manager/latest/userguide/ps-integration-lambda-extensions.html
-  #   "arn:aws:lambda:ap-northeast-1:133490724326:layer:AWS-Parameters-and-Secrets-Lambda-Extension:2"
-  # ]
 }
 
 resource "aws_iam_role" "role_for_lambda" {
