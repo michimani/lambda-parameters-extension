@@ -3,6 +3,18 @@ lambda
 
 A Lambda function that simply retrieves values from the Parameter Store and outputs them to the log.
 
+## Preparing
+
+Download Parameters and Secrets Lambda Extension to your local machine.
+
+```bash
+curl $(
+  aws lambda get-layer-version-by-arn \
+  --arn 'arn:aws:lambda:ap-northeast-1:133490724326:layer:AWS-Parameters-and-Secrets-Lambda-Extension:2' \
+  --query 'Content.Location' --output text
+) --output extension/ps-ex.zip
+```
+
 ## Run at local
 
 1. Build for local
@@ -92,6 +104,8 @@ aws lambda get-function \
 
 When using AWS CLI v2. (The `--cli-binary-format` option is not required when using v1.)
 
+### Get parameter via SDK
+
 ```bash
 aws lambda invoke \
 --function-name 'lambda-parameters-extension-function' \
@@ -124,4 +138,41 @@ START RequestId: c7d58c6a-e4e7-4c0b-b320-7294c6223f64 Version: $LATEST
 2022/10/19 16:52:36 [prod] end handler
 END RequestId: c7d58c6a-e4e7-4c0b-b320-7294c6223f64
 REPORT RequestId: c7d58c6a-e4e7-4c0b-b320-7294c6223f64	Duration: 278.26 ms	Billed Duration: 279 ms	Memory Size: 128 MB	Max Memory Used: 26 MB
+```
+
+### Get parameter via AWSParametersAndSecretsLambdaExtension
+
+```bash
+aws lambda invoke \
+--function-name 'lambda-parameters-extension-function' \
+--invocation-type 'RequestResponse' \
+--cli-binary-format 'raw-in-base64-out' \
+--payload '{"useExtension": true, "count": 10}' \
+--region 'ap-northeast-1' \
+--log-type 'Tail' \
+/dev/stdout \
+| jq -sr '.[1] | .LogResult' \
+| base64 -d
+```
+
+Following output will be got.
+
+```bash
+START RequestId: 0db9019e-796d-466a-b270-03d33d347663 Version: $LATEST
+[AWS Parameters and Secrets Lambda Extension] 2022/10/20 17:52:18 INFO ready to serve traffic
+2022/10/20 17:52:18 start handler at prod
+2022/10/20 17:52:18 UseExtension: true, Count: 10
+2022/10/20 17:52:18 [0] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 [1] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 [2] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 [3] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 [4] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 [5] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 [6] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 [7] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 [8] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 [9] extension:true value:This is test parameter key:/test/lambda-parameters-extension
+2022/10/20 17:52:18 end handler at prod
+END RequestId: 0db9019e-796d-466a-b270-03d33d347663
+REPORT RequestId: 0db9019e-796d-466a-b270-03d33d347663	Duration: 23.73 ms	Billed Duration: 24 ms	Memory Size: 128 MB	Max Memory Used: 44 MB
 ```
