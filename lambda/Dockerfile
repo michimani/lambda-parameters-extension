@@ -16,11 +16,12 @@ RUN rm ps-ex.zip
 # copy artifacts to a clean image
 FROM public.ecr.aws/lambda/provided:al2
 COPY --from=build /main /main
-COPY entry.sh /
-RUN chmod 755 /entry.sh
+# COPY entry.sh /
+# RUN chmod 755 /entry.sh
 RUN mkdir -p /opt/extensions
 WORKDIR /opt/extensions
 COPY --from=build /opt/extensions .
 ENV ENV prod
-ENTRYPOINT [ "/entry.sh" ]
-CMD ["/main"]
+# ENTRYPOINT [ "/entry.sh" ]
+ENTRYPOINT [ "/main" ]
+# CMD ["/main"]
